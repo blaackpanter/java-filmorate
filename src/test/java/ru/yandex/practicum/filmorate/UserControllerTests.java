@@ -26,11 +26,10 @@ class UserControllerTests {
     @Test
     void testCreateUser() throws Exception {
         mockMvc.perform(post("/users").content("""
-                {
-                    "login":"ta",
-                    "name":"ivan",
-                    "email":"lo@gmai.ru",
-                    "birthday":"2008-02-02"	
+                {"login":"ta",
+                "name":"ivan",
+                "email":"lo@gmai.ru",
+                "birthday":"2008-02-02"	
                 }
                 """).contentType(MediaType.APPLICATION_JSON)).andExpect(status().is2xxSuccessful());
     }
@@ -40,11 +39,10 @@ class UserControllerTests {
         mockMvc.perform(
                         post("/users")
                                 .content("""
-                                        {
-                                            "login":"   ",
-                                            "name":"ivan",
-                                            "email":"lo@gmai.ru",
-                                            "birthday":"2008-02-02"	
+                                        {"login":"   ",
+                                        "name":"ivan",
+                                        "email":"lo@gmai.ru",
+                                        "birthday":"2008-02-02"	
                                         }
                                         """)
                                 .contentType(MediaType.APPLICATION_JSON)
