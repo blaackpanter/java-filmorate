@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 @Data
@@ -19,6 +20,7 @@ public class User {
     private final String email;
 
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z0-9]{1,20}$")
     private final String login;
 
     private String name;
