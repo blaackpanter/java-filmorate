@@ -44,7 +44,7 @@ public class FilmController {
         }
         if (!films.containsKey(film.getId())) {
             log.error("Не удалось обновить обновить информацию о фильме. Фильма нет в списке.");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Не найдено фильма с id = %s".formatted(film.getId()));
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Не найдено фильма с id = %s", film.getId()));
         }
         checkFilmReleaseDate(film);
         films.put(film.getId(), film);
@@ -60,7 +60,7 @@ public class FilmController {
     private void checkFilmReleaseDate(Film film) {
         if (film.getReleaseDate().isBefore(MIN_DATE)) {
             log.error("Нельзя добавить фильм с такой датой релиза");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Дата релиза должна быть не раньше %s".formatted(MIN_DATE));
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Дата релиза должна быть не раньше %s", MIN_DATE));
         }
     }
 }

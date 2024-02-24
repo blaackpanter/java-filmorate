@@ -42,7 +42,7 @@ public class UserController {
         }
         if (!users.containsKey(user.getId())) {
             log.error("Не удалось обновить обновить информацию о юзере. Юзера нет в списке.");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Не найдено пользователя с id = %s".formatted(user.getId()));
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Не найдено пользователя с id = %s", user.getId()));
         }
         checkName(user);
         users.put(user.getId(), user);
