@@ -24,17 +24,18 @@ public class UserController {
     private HashMap<Integer, User> users = new HashMap<>();
 
     @PostMapping
-    public void createUser(@Valid @RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         log.info("Создаем нового юзера.");
         checkName(user);
         int id = users.size() + 1;
         user.setId(id);
         users.put(id, user);
         log.info("Новый юзер успешно создан");
+        return user;
     }
 
     @PutMapping
-    public void updateUser(@Valid @RequestBody User user) {
+    public User updateUser(@Valid @RequestBody User user) {
         log.info("Обновим информацию о юзере");
         if (getAllUsersList().isEmpty()) {
             log.error("Не удалось обновить обновить информацию о юзере. Список юзеров пустой.");
@@ -47,10 +48,11 @@ public class UserController {
         checkName(user);
         users.put(user.getId(), user);
         log.info("Информация о юзере успешно обновлена");
+        return user;
     }
 
     @GetMapping
-    public List getAllUsersList() {
+    public List<User> getAllUsersList() {
         log.info("Возвращаем список юзеров");
         return new ArrayList<>(users.values());
     }

@@ -36,7 +36,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public void updateFilm(@Valid @RequestBody Film film) {
+    public Film updateFilm(@Valid @RequestBody Film film) {
         log.info("Обновим информацию о фильме");
         if (getAllFilmsList().isEmpty()) {
             log.error("Не удалось обновить обновить информацию о фильме. Список фильмов пустой.");
@@ -49,10 +49,11 @@ public class FilmController {
         checkFilmReleaseDate(film);
         films.put(film.getId(), film);
         log.info("Информация о фильме успешно обновлена");
+        return film;
     }
 
     @GetMapping
-    public List getAllFilmsList() {
+    public List<Film> getAllFilmsList() {
         log.info("Возвращаем список фильмов");
         return new ArrayList<>(films.values());
     }
