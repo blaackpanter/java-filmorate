@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping
     public void createUser(@Valid @RequestBody User user) {
-        log.info("Создаем нового юзера");
+        log.info("Создаем нового юзера.");
         checkName(user);
         int id = users.size() + 1;
         user.setId(id);
