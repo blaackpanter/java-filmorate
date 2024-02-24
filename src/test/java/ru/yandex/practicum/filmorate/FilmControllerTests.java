@@ -25,7 +25,7 @@ class FilmControllerTests {
     @Test
     void testAddFilm() throws Exception {
         mockMvc.perform(post("/films").content("""
-                			{
+                {
                 	"name": "Titanik",
                 	"description": "About ship and love",
                 	"releaseDate": "2004-01-18",
@@ -39,7 +39,7 @@ class FilmControllerTests {
         mockMvc.perform(
                         post("/films")
                                 .content("""
-                                        			{
+                                        {
                                         	"name": "Titanik",
                                         	"description": "About ship and love",
                                         	"releaseDate": "1700-01-18",
