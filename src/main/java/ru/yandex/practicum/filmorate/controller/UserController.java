@@ -58,7 +58,7 @@ public class UserController {
     }
 
     private void checkName(User user) {
-        if (user.getName().isBlank()) {
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
             log.info("Заменили пустое имя на логин");
         }
