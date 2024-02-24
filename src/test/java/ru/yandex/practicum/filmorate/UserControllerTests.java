@@ -25,26 +25,17 @@ class UserControllerTests {
 
     @Test
     void testCreateUser() throws Exception {
-        mockMvc.perform(post("/users").content("""
-                {"login":"ta",
-                "name":"ivan",
-                "email":"lo@gmai.ru",
-                "birthday":"2008-02-02"	
-                }
-                """).contentType(MediaType.APPLICATION_JSON)).andExpect(status().is2xxSuccessful());
+        mockMvc.perform(post("/users")
+                        .content("{\"login\":\"ta\",\"name\":\"ivan\",\"email\":\"lo@gmai.ru\",\"birthday\":\"2008-02-02\"}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void testCheckEmptyLogin() throws Exception {
         mockMvc.perform(
                         post("/users")
-                                .content("""
-                                        {"login":"   ",
-                                        "name":"ivan",
-                                        "email":"lo@gmai.ru",
-                                        "birthday":"2008-02-02"	
-                                        }
-                                        """)
+                                .content("{\"login\":\"   \",\"name\":\"ivan\",\"email\":\"lo@gmai.ru\",\"birthday\":\"2008-02-02\"}")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isBadRequest())

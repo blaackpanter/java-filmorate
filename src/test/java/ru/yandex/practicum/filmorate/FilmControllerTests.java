@@ -24,29 +24,17 @@ class FilmControllerTests {
 
     @Test
     void testAddFilm() throws Exception {
-        mockMvc.perform(post("/films").content("""
-               {"name": "Titanik",
-                "description": "About ship and love",
-                "releaseDate": "2004-01-18",
-                "duration": 90
-                }
-                """).contentType(MediaType.APPLICATION_JSON)).andExpect(status().is2xxSuccessful());
+        mockMvc.perform(post("/films").content("{\"name\": \"Titanik\",\"description\": \"About ship and love\",\"releaseDate\": \"2004-01-18\",\"duration\": 90}").contentType(MediaType.APPLICATION_JSON)).andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void testCheckDateBefore() throws Exception {
         mockMvc.perform(
                         post("/films")
-                                .content("""
-                                        {"name": "Titanik",
-                                        "description": "About ship and love",
-                                        "releaseDate": "1700-01-18",
-                                        "duration": 90
-                                        }
-                                        """)
+                                .content("{\"name\": \"Titanik\",\"description\": \"About ship and love\",\"releaseDate\": \"1700-01-18\",\"duration\": 90}")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ResponseStatusException));
     }
 
