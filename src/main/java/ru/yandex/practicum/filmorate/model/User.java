@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
@@ -16,9 +17,11 @@ public class User {
 
     @Email
     @NotBlank
+    @Size(max = 128)
     private final String email;
 
     @NotBlank
+    @Size(max = 128)
     private final String login;
 
     private String name;
