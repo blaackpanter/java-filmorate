@@ -49,7 +49,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public List<Film> getFilmsSortByLike(int limit) {
         return films.values().stream()
-                .sorted(Comparator.comparingInt(film -> film.getLikeUserIds().size()))
+                .sorted(
+                        Comparator.<Film>comparingInt(film -> film.getLikeUserIds().size())
+                                .reversed()
+                )
                 .limit(limit)
                 .collect(Collectors.toList());
     }
