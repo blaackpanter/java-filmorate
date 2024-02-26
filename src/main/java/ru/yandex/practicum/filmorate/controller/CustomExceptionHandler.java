@@ -30,7 +30,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(
                         new ErrorData(
-                                String.format("Неправильный запрос. Ошибка %s", ex.getMessage())
+                                String.format("Неправильный запрос. Ошибка %s", ex.getMessage()),
+                                ex.getStackTrace()
                         )
                 );
     }
@@ -43,7 +44,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(
                         new ErrorData(
-                                String.format("Ошибка, что объект не найден. Ошибка %s", ex.getMessage())
+                                String.format("Ошибка, что объект не найден. Ошибка %s", ex.getMessage()),
+                                ex.getStackTrace()
                         )
                 );
     }
@@ -66,7 +68,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(
                         new ErrorData(
-                                String.format("Ошибка %s", ex.getMessage())
+                                String.format("Ошибка %s", ex.getMessage()),
+                                ex.getStackTrace()
                         )
                 );
     }
@@ -74,5 +77,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @Data
     private class ErrorData {
         private final String message;
+        private final StackTraceElement[] stackTraceElements;
     }
 }
