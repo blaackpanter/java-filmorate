@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +44,9 @@ public class FilmServiceImpl implements FilmService {
     public Film update(Film film) throws WrongFilmDateException, FilmNotFoundException {
         if (getAllFilms().isEmpty()) {
             throw new FilmNotFoundException("Фильмов не найдено, чтобы обновить сначала необходимо добавить фильм");
+        }
+        if (film.getLikeUserIds() == null) {
+            film.setLikeUserIds(Collections.emptySet());
         }
         checkFilmReleaseDate(film);
         return filmStorage.update(film);
