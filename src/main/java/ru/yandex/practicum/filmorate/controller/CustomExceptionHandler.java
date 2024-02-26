@@ -62,7 +62,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class, RuntimeException.class})
     public ResponseEntity<Object> defaultErrorHandler(Exception ex) {
-        log.error("Ошибка", ex);
+        log.error("Ошибка ", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
