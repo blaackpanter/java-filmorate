@@ -64,7 +64,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam("count") int count) {
+    public List<Film> getPopularFilms(@RequestParam(value = "count", required = false, defaultValue = "0") int count) {
         if (count == 0) {
             count = 10;
         }
