@@ -1,66 +1,73 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.user.UserService;
+import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    private final UserService userService;
 
-    private HashMap<Integer, User> users = new HashMap<>();
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         log.info("Создаем нового юзера.");
-        checkName(user);
-        int id = users.size() + 1;
-        user.setId(id);
-        users.put(id, user);
+        final User add = userService.add(user);
         log.info("Новый юзер успешно создан");
-        return user;
+        return add;
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user) {
+    public User updateUser(@Valid @RequestBody User user) throws UserNotFoundException {
         log.info("Обновим информацию о юзере");
-        if (getAllUsersList().isEmpty()) {
-            log.error("Не удалось обновить обновить информацию о юзере. Список юзеров пустой.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователей не найдено, чтобы обновить сначала необходимо добавить пользователя");
-        }
-        if (!users.containsKey(user.getId())) {
-            log.error("Не удалось обновить обновить информацию о юзере. Юзера нет в списке.");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Не найдено пользователя с id = %s", user.getId()));
-        }
-        checkName(user);
-        users.put(user.getId(), user);
+        final User update = userService.update(user);
         log.info("Информация о юзере успешно обновлена");
-        return user;
+        return update;
     }
 
     @GetMapping
     public List<User> getAllUsersList() {
         log.info("Возвращаем список юзеров");
-        return new ArrayList<>(users.values());
+        return userService.getAllUsers();
     }
 
-    private void checkName(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-            log.info("Заменили пустое имя на логин");
-        }
+    @PutMapping("/{id}/friends/{friendId}")
+    public boolean addFriend(@PathVariable("id") int id, @PathVariable("friendId") int friendId) throws UserNotFoundException {
+        return userService.makeFriends(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public boolean deleteFriend(@PathVariable("id") int id, @PathVariable("friendId") int friendId) throws UserNotFoundException {
+        return userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public Set<User> getFriends(@PathVariable("id") int id) throws UserNotFoundException {
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Set<User> getCommonFriends(@PathVariable("id") int id, @PathVariable("otherId") int otherId) throws UserNotFoundException {
+        return userService.getCommonFriends(id, otherId);
     }
 }

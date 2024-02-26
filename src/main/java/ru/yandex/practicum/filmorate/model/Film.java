@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Film.
@@ -31,4 +33,6 @@ public class Film {
 
     @Positive
     private final long duration;
+
+    private Set<Integer> likeUserIds = Collections.emptySet();
 }
