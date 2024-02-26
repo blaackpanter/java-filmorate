@@ -63,7 +63,7 @@ public class FilmController {
         return filmService.deleteLike(id, userId);
     }
 
-    @GetMapping("/films/popular")
+    @GetMapping("/popular")
     public List<Film> getPopularFilms(@RequestParam("count") int count) {
         if (count == 0) {
             count = 10;
@@ -72,7 +72,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film getFils(@PathVariable("id") int id) throws FilmNotFoundException {
+    public Film getFilms(@PathVariable("id") int id) throws FilmNotFoundException {
         return filmService.getFilm(id);
     }
 }

@@ -60,20 +60,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return handleBadRequest(ex, request);
     }
 
-    @ExceptionHandler(value = {Exception.class, RuntimeException.class})
-    public ResponseEntity<Object> defaultErrorHandler(Exception ex) {
-        log.error("Ошибка ", ex);
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(
-                        new ErrorData(
-                                String.format("Ошибка %s", ex.getMessage()),
-                                ex.getStackTrace()
-                        )
-                );
-    }
-
     @Data
     private class ErrorData {
         private final String message;

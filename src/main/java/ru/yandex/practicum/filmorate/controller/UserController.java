@@ -15,8 +15,10 @@ import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -62,8 +64,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public Set<User> getFriends(@PathVariable("id") int id) throws UserNotFoundException {
-        return userService.getFriends(id);
+    public List<User> getFriends(@PathVariable("id") int id) throws UserNotFoundException {
+        return userService.getFriends(id)
+                .stream()
+                .sorted(Comparator.comparingInt(User::getId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
