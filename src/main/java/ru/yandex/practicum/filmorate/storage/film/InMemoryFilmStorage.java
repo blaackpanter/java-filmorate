@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
-    private HashMap<Integer, Film> films = new HashMap<>();
+    private final HashMap<Integer, Film> films = new HashMap<>();
 
     @Override
     public Film add(Film film) throws WrongFilmDateException {
@@ -25,7 +25,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film get(int id) throws FilmNotFoundException {
         final Film film = films.get(id);
         if (film == null) {
-            throw new FilmNotFoundException(String.format("Не найдено фильма с id = %s", film.getId()));
+            throw new FilmNotFoundException(String.format("Не найдено фильма с id = %s", id));
         }
         return film;
     }
