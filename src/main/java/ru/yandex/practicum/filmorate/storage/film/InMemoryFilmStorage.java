@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.WrongFilmDateException;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film add(Film film) throws WrongFilmDateException {
         int id = films.size() + 1;
         film.setId(id);
+        film.setLikeUserIds(Collections.emptySet());
         films.put(id, film);
         return film;
     }

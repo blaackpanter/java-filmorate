@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User add(User user) {
         int id = users.size() + 1;
         user.setId(id);
+        user.setFriends(Collections.emptySet());
         users.put(id, user);
         return user;
     }
