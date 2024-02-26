@@ -25,7 +25,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {WrongFilmDateException.class, ValidationException.class})
     protected ResponseEntity<Object> handleBadRequest(Exception ex, WebRequest request) {
         log.error("Ошибка, что неправильный запрос.", ex);
-        return ResponseEntity.badRequest()
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(
                         new ErrorData(
@@ -37,7 +38,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {UserNotFoundException.class, FilmNotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
         log.error("Ошибка, что объект не найден.", ex);
-        return ResponseEntity.badRequest()
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(
                         new ErrorData(
