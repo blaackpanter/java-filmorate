@@ -10,6 +10,8 @@ public interface UserService {
 
     User add(User user);
 
+    User getUser(int id) throws UserNotFoundException;
+
     boolean userExist(int id);
 
     User update(User user) throws UserNotFoundException;

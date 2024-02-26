@@ -10,6 +10,8 @@ public interface FilmService {
 
     Film add(Film film) throws WrongFilmDateException;
 
+    Film getFilm(int id) throws FilmNotFoundException;
+
     Film update(Film film) throws WrongFilmDateException, FilmNotFoundException;
 
     List<Film> getAllFilms();

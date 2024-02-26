@@ -35,6 +35,11 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
+    public Film getFilm(int id) throws FilmNotFoundException {
+        return filmStorage.get(id);
+    }
+
+    @Override
     public Film update(Film film) throws WrongFilmDateException, FilmNotFoundException {
         if (getAllFilms().isEmpty()) {
             throw new FilmNotFoundException("Фильмов не найдено, чтобы обновить сначала необходимо добавить фильм");

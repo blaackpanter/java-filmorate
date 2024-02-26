@@ -70,4 +70,9 @@ public class FilmController {
         }
         return filmService.getPopularFilms(count);
     }
+
+    @GetMapping("/{id}")
+    public Film getFils(@PathVariable("id") int id) throws FilmNotFoundException {
+        return filmService.getFilm(id);
+    }
 }

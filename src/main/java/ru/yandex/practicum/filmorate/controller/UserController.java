@@ -70,4 +70,9 @@ public class UserController {
     public Set<User> getCommonFriends(@PathVariable("id") int id, @PathVariable("otherId") int otherId) throws UserNotFoundException {
         return userService.getCommonFriends(id, otherId);
     }
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable("id") int id) throws UserNotFoundException {
+        return userService.getUser(id);
+    }
 }

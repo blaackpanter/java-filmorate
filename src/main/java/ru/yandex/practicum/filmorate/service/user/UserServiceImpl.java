@@ -29,6 +29,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUser(int id) throws UserNotFoundException {
+        return userStorage.get(id);
+    }
+
+    @Override
     public boolean userExist(int id) {
         return userStorage.userExist(id);
     }
