@@ -58,6 +58,19 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return handleBadRequest(ex, request);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("Ошибка, что объект не найден.", ex);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                        new ErrorData(
+                                String.format("Ошибка, что объект не найден. Ошибка %s", ex.getMessage())
+                        )
+                );
+    }
+
     @Data
     private class ErrorData {
         private final String message;
