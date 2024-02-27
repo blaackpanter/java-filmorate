@@ -9,17 +9,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private final HashMap<Integer, User> users = new HashMap<>();
-    private final AtomicInteger idGenerator = new AtomicInteger();
+    private int id = 0;
 
     @Override
     public User add(User user) {
-        int id = idGenerator.getAndIncrement();
+        id += 1;
         user.setId(id);
         user.setFriends(Collections.emptySet());
         users.put(id, user);
