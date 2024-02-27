@@ -7,15 +7,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Integer, Film> films = new HashMap<>();
+    private final AtomicInteger idGenerator = new AtomicInteger();
 
     @Override
     public Film add(Film film) {
-        int id = films.size() + 1;
+        int id = idGenerator.getAndIncrement();
         film.setId(id);
         film.setLikeUserIds(Collections.emptySet());
         films.put(id, film);
