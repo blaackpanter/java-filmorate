@@ -30,7 +30,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User get(int id) throws UserNotFoundException {
+    public User get(int id) {
         final User user = users.get(id);
         if (user == null) {
             throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
@@ -39,7 +39,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> get(Collection<Integer> ids) throws UserNotFoundException {
+    public List<User> get(Collection<Integer> ids) {
         final List<User> result = new ArrayList<>();
         for (Integer id : ids) {
             result.add(get(id));
@@ -48,7 +48,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User update(User user) throws UserNotFoundException {
+    public User update(User user) {
         if (!users.containsKey(user.getId())) {
             throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", user.getId()));
         }

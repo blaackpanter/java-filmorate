@@ -1,17 +1,16 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.film.WrongFilmDateException;
 
 import java.util.List;
 
 public interface FilmStorage {
 
-    Film add(Film film) throws WrongFilmDateException;
+    Film add(Film film);
 
-    Film get(int id) throws FilmNotFoundException;
+    Film get(int id);
 
-    Film update(Film film) throws WrongFilmDateException, FilmNotFoundException;
+    Film update(Film film);
 
     List<Film> getAllFilms();
 

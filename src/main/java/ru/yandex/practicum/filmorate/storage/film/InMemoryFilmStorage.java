@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.film.WrongFilmDateException;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,7 +14,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Integer, Film> films = new HashMap<>();
 
     @Override
-    public Film add(Film film) throws WrongFilmDateException {
+    public Film add(Film film) {
         int id = films.size() + 1;
         film.setId(id);
         film.setLikeUserIds(Collections.emptySet());
@@ -24,7 +23,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film get(int id) throws FilmNotFoundException {
+    public Film get(int id) {
         final Film film = films.get(id);
         if (film == null) {
             throw new FilmNotFoundException(String.format("Не найдено фильма с id = %s", id));
@@ -33,7 +32,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film update(Film film) throws WrongFilmDateException, FilmNotFoundException {
+    public Film update(Film film) {
         if (!films.containsKey(film.getId())) {
             throw new FilmNotFoundException(String.format("Не найдено фильма с id = %s", film.getId()));
         }

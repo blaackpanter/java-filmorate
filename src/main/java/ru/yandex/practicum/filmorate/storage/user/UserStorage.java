@@ -11,11 +11,11 @@ public interface UserStorage {
 
     boolean userExist(int id);
 
-    User get(int id) throws UserNotFoundException;
+    User get(int id);
 
-    List<User> get(Collection<Integer> id) throws UserNotFoundException;
+    List<User> get(Collection<Integer> id);
 
-    User update(User user) throws UserNotFoundException;
+    User update(User user);
 
     List<User> getAllUsers();
 }

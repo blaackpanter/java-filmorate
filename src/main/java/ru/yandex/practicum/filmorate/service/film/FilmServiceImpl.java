@@ -30,18 +30,18 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Film add(Film film) throws WrongFilmDateException {
+    public Film add(Film film) {
         checkFilmReleaseDate(film);
         return filmStorage.add(film);
     }
 
     @Override
-    public Film getFilm(int id) throws FilmNotFoundException {
+    public Film getFilm(int id) {
         return filmStorage.get(id);
     }
 
     @Override
-    public Film update(Film film) throws WrongFilmDateException, FilmNotFoundException {
+    public Film update(Film film) {
         if (getAllFilms().isEmpty()) {
             throw new FilmNotFoundException("Фильмов не найдено, чтобы обновить сначала необходимо добавить фильм");
         }
@@ -58,7 +58,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public boolean addLike(int id, int userId) throws UserNotFoundException, FilmNotFoundException, WrongFilmDateException {
+    public boolean addLike(int id, int userId) {
         if (!userService.userExist(userId)) {
             throw new UserNotFoundException("Невозможно поставить лайк пользователем, которого не существует");
         }
@@ -74,7 +74,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public boolean deleteLike(int id, int userId) throws UserNotFoundException, FilmNotFoundException, WrongFilmDateException {
+    public boolean deleteLike(int id, int userId) {
         if (!userService.userExist(userId)) {
             throw new UserNotFoundException("Невозможно поставить лайк пользователем, которого не существует");
         }
@@ -94,7 +94,7 @@ public class FilmServiceImpl implements FilmService {
         return filmStorage.getFilmsSortByLike(count);
     }
 
-    private void checkFilmReleaseDate(Film film) throws WrongFilmDateException {
+    private void checkFilmReleaseDate(Film film) {
         if (film.getReleaseDate().isBefore(MIN_DATE)) {
             throw new WrongFilmDateException(String.format("Дата релиза должна быть не раньше %s", MIN_DATE));
         }

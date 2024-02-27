@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(int id) throws UserNotFoundException {
+    public User getUser(int id) {
         return userStorage.get(id);
     }
 
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) throws UserNotFoundException {
+    public User update(User user) {
         if (getAllUsers().isEmpty()) {
             throw new UserNotFoundException("Пользователей не найдено, чтобы обновить сначала необходимо добавить пользователя");
         }
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean makeFriends(int id, int friendId) throws UserNotFoundException {
+    public boolean makeFriends(int id, int friendId) {
         final User user = userStorage.get(id);
         if (user.getFriends().contains(friendId)) {
             return false;
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteFriend(int id, int friendId) throws UserNotFoundException {
+    public boolean deleteFriend(int id, int friendId) {
         final User user = userStorage.get(id);
         if (!user.getFriends().contains(friendId)) {
             return false;
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> getFriends(int id) throws UserNotFoundException {
+    public Set<User> getFriends(int id) {
         return Set.copyOf(
                 userStorage.get(
                         userStorage.get(id).getFriends()
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> getCommonFriends(int id, int otherId) throws UserNotFoundException {
+    public Set<User> getCommonFriends(int id, int otherId) {
         final User user = userStorage.get(id);
         if (user.getFriends().isEmpty()) {
             return Collections.emptySet();

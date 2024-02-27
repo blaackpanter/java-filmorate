@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
-import ru.yandex.practicum.filmorate.service.film.WrongFilmDateException;
-import ru.yandex.practicum.filmorate.storage.film.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,7 +29,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film addFilm(@Valid @RequestBody Film film) throws WrongFilmDateException {
+    public Film addFilm(@Valid @RequestBody Film film) {
         log.info("Добавляем фильм");
         final Film add = filmService.add(film);
         log.info("Фильм успешно добавлен");
@@ -40,7 +37,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) throws FilmNotFoundException, WrongFilmDateException {
+    public Film updateFilm(@Valid @RequestBody Film film) {
         log.info("Обновим информацию о фильме");
         final Film update = filmService.update(film);
         log.info("Информация о фильме успешно обновлена");
@@ -54,12 +51,12 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public boolean addLike(@PathVariable("id") int id, @PathVariable("userId") int userId) throws UserNotFoundException, FilmNotFoundException, WrongFilmDateException {
+    public boolean addLike(@PathVariable("id") int id, @PathVariable("userId") int userId) {
         return filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public boolean deleteLike(@PathVariable("id") int id, @PathVariable("userId") int userId) throws UserNotFoundException, FilmNotFoundException, WrongFilmDateException {
+    public boolean deleteLike(@PathVariable("id") int id, @PathVariable("userId") int userId) {
         return filmService.deleteLike(id, userId);
     }
 
@@ -72,7 +69,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film getFilms(@PathVariable("id") int id) throws FilmNotFoundException {
+    public Film getFilms(@PathVariable("id") int id) {
         return filmService.getFilm(id);
     }
 }

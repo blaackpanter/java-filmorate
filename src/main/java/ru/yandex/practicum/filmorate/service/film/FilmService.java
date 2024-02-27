@@ -1,24 +1,22 @@
 package ru.yandex.practicum.filmorate.service.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import java.util.List;
 
 public interface FilmService {
 
-    Film add(Film film) throws WrongFilmDateException;
+    Film add(Film film);
 
-    Film getFilm(int id) throws FilmNotFoundException;
+    Film getFilm(int id);
 
-    Film update(Film film) throws WrongFilmDateException, FilmNotFoundException;
+    Film update(Film film);
 
     List<Film> getAllFilms();
 
-    boolean addLike(int id, int userId) throws UserNotFoundException, FilmNotFoundException, WrongFilmDateException;
+    boolean addLike(int id, int userId);
 
-    boolean deleteLike(int id, int userId) throws UserNotFoundException, FilmNotFoundException, WrongFilmDateException;
+    boolean deleteLike(int id, int userId);
 
     List<Film> getPopularFilms(int count);
 }

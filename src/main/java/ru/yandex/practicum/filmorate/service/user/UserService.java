@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service.user;
 
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import java.util.List;
 import java.util.Set;
@@ -10,19 +9,19 @@ public interface UserService {
 
     User add(User user);
 
-    User getUser(int id) throws UserNotFoundException;
+    User getUser(int id);
 
     boolean userExist(int id);
 
-    User update(User user) throws UserNotFoundException;
+    User update(User user);
 
     List<User> getAllUsers();
 
-    boolean makeFriends(int id, int friendId) throws UserNotFoundException;
+    boolean makeFriends(int id, int friendId);
 
-    boolean deleteFriend(int id, int friendId) throws UserNotFoundException;
+    boolean deleteFriend(int id, int friendId);
 
-    Set<User> getFriends(int id) throws UserNotFoundException;
+    Set<User> getFriends(int id);
 
-    Set<User> getCommonFriends(int id, int otherId) throws UserNotFoundException;
+    Set<User> getCommonFriends(int id, int otherId);
 }
