@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Set;
 
 @Data
 @Builder
@@ -29,4 +31,6 @@ public class User {
     @NotNull
     @PastOrPresent
     private final LocalDate birthday;
+
+    private Set<Integer> friends = Collections.emptySet();
 }
