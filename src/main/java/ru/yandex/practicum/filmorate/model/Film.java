@@ -35,8 +35,8 @@ public class Film {
     private final long duration;
 
     @NotNull
-    private final MpaRating mpaRating;
+    private final MpaRating mpa;
 
     private Set<Integer> likeUserIds = Collections.emptySet();
-    private Set<String> genres = Collections.emptySet();
+    private Set<Genre> genres = Collections.emptySet();
 }
