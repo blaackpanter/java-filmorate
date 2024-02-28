@@ -196,7 +196,7 @@ public class FilmDbStorage implements FilmStorage {
         final List<Film> films = jdbcTemplate.query(
                 con -> {
                     final PreparedStatement ps = con.prepareStatement(
-                            "SELECT f.id, f.name , f.description , f.release_date , f.duration, m.id, m.name FROM films as f LEFT JOIN (SELECT film_id, COUNT(*) as countLikes FROM films_users_likes GROUP BY film_id ORDER BY countLikes DESC) as sortByLikes ON f.id = sortByLikes.film_id LEFT JOIN mpa_ratings as m ON f.mpa_id = m.id LIMIT ?");
+                            "SELECT f.id, f.name , f.description , f.release_date , f.duration, m.id, m.name, sortByLikes.countLikes FROM films as f LEFT JOIN (SELECT film_id, COUNT(*) as countLikes FROM films_users_likes GROUP BY film_id) as sortByLikes ON f.id = sortByLikes.film_id LEFT JOIN mpa_ratings as m ON f.mpa_id = m.id ORDER BY countLikes DESC LIMIT ?");
                     ps.setInt(1, limit);
                     return ps;
                 },
