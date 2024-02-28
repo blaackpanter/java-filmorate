@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS films
     description  VARCHAR(200),
     release_date DATE,
     duration     INTEGER CHECK (duration > 0),
-    mpa_rating   INTEGER
+    mpa_rating   VARCHAR
 );
 
 
