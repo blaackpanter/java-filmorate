@@ -80,7 +80,7 @@ public class FilmDbStorage implements FilmStorage {
 
     private Set<Integer> getLikeUserIds(int id) {
         final List<Integer> likeUserIds = jdbcTemplate.query(con -> {
-                    final PreparedStatement ps = con.prepareStatement("SELECT user_id FROM films_users_likes WHERE user_id = ?");
+                    final PreparedStatement ps = con.prepareStatement("SELECT user_id FROM films_users_likes WHERE film_id = ?");
                     ps.setInt(1, id);
                     return ps;
                 },
@@ -196,12 +196,7 @@ public class FilmDbStorage implements FilmStorage {
         final List<Film> films = jdbcTemplate.query(
                 con -> {
                     final PreparedStatement ps = con.prepareStatement(
-                            "SELECT * FROM films " +
-                                    "LEFT JOIN (" +
-                                    "SELECT film_id, COUNT(*) as countLikes " +
-                                    "FROM films_users_likes GROUP BY film_id ORDER BY countLikes DESC" +
-                                    ") as sortByLikes " +
-                                    "ON films.id = sortByLikes.film_id LIMIT ?");
+                            "SELECT * FROM films as f LEFT JOIN (SELECT film_id, COUNT(*) as countLikes FROM films_users_likes GROUP BY film_id ORDER BY countLikes DESC) as sortByLikes ON f.id = sortByLikes.film_id LEFT JOIN mpa_ratings as m ON f.mpa_id = m.id LIMIT ?");
                     ps.setInt(1, limit);
                     return ps;
                 },
