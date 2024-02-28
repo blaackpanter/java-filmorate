@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -67,16 +68,16 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User get(int id) {
-        User user = jdbcTemplate.query(
-                con -> {
-                    final PreparedStatement ps = con.prepareStatement("SELECT id, email, login, name, birthday FROM users WHERE id = ?");
-                    ps.setInt(1, id);
-                    return ps;
-                },
-                this::extractUser
-        );
-        user.setFriends(getFriendIds(id));
-        return user;
+        try {
+            User user = jdbcTemplate.queryForObject(
+                    String.format("SELECT id, email, login, name, birthday FROM users WHERE id = %s", id),
+                    (rs, num) -> extractUser(rs)
+            );
+            user.setFriends(getFriendIds(id));
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+        }
     }
 
     private Set<Integer> getFriendIds(int id) {
