@@ -47,17 +47,18 @@ public class FilmDbStorage implements FilmStorage {
                     return ps;
                 },
                 keyHolder);
+        final Integer id = keyHolder.getKeyAs(Integer.class);
         final Set<Genre> genres = film.getGenres();
         if (genres != null) {
             for (Genre genre : genres) {
                 jdbcTemplate.update(
                         "INSERT INTO films_genres (film_id, genre_id) VALUES (? , ?)",
-                        film.getId(),
+                        id,
                         genre.getId()
                 );
             }
         }
-        return get(keyHolder.getKeyAs(Integer.class));
+        return get(id);
     }
 
     @Override
