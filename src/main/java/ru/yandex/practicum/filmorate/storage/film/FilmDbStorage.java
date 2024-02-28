@@ -139,7 +139,8 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 Date.valueOf(film.getReleaseDate()),
                 film.getDuration(),
-                film.getMpa().getId()
+                film.getMpa().getId(),
+                film.getId()
         );
         if (update == 0) {
             throw new FilmNotFoundException(String.format("Не найдено фильма с id = %s", film.getId()));
@@ -176,13 +177,13 @@ public class FilmDbStorage implements FilmStorage {
         } else {
             film.setGenres(Collections.emptySet());
         }
-        return film;
+        return get(film.getId());
     }
 
     @Override
     public List<Film> getAllFilms() {
         final List<Film> films = jdbcTemplate.query(
-                con -> con.prepareStatement("SELECT id, email, login, name, birthday FROM users"),
+                con -> con.prepareStatement("SELECT f.id, f.name , f.description , f.release_date , f.duration, m.id, m.name FROM films as f LEFT JOIN mpa_ratings as m ON f.mpa_id = m.id"),
                 (rs, rowNum) -> extractFilm(rs)
         );
         for (Film film : films) {
