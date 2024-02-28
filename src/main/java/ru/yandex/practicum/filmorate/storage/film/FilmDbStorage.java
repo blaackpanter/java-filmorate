@@ -74,7 +74,7 @@ public class FilmDbStorage implements FilmStorage {
             film.setGenres(getGenres(id));
             return film;
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s ", id));
         }
     }
 
