@@ -53,17 +53,15 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public boolean userExist(int id) {
-        final Integer count = jdbcTemplate.query(
-                con -> {
-                    final PreparedStatement ps = con.prepareStatement("SELECT count(*) FROM users WHERE id = ?");
-                    ps.setInt(1, id);
-                    return ps;
-                },
-                rs -> {
-                    return rs.getInt(1);
-                }
-        );
-        return count != null && count > 0;
+        try {
+            final Integer count = jdbcTemplate.queryForObject(
+                    String.format("SELECT count(*) FROM users WHERE id = %s", id),
+                    (rs, num) -> rs.getInt(1)
+            );
+            return count != null && count > 0;
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+        }
     }
 
     @Override

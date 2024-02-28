@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MpaRating;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -63,21 +66,17 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film get(int id) {
-        final List<Film> films = jdbcTemplate.query(
-                con -> {
-                    final PreparedStatement ps = con.prepareStatement("SELECT f.id, f.name , f.description , f.release_date , f.duration, m.id, m.name FROM films as f LEFT JOIN mpa_ratings as m ON f.mpa_id = m.id WHERE f.id = ?");
-                    ps.setInt(1, id);
-                    return ps;
-                },
-                (rs, num) -> extractFilm(rs)
-        );
-        if (films.size() > 1) {
-            throw new RuntimeException("Wrong db objects");
+        try {
+            Film film = jdbcTemplate.queryForObject(
+                    String.format("SELECT f.id, f.name , f.description , f.release_date , f.duration, m.id, m.name FROM films as f LEFT JOIN mpa_ratings as m ON f.mpa_id = m.id WHERE f.id = %s", id),
+                    (rs, num) -> extractFilm(rs)
+            );
+            film.setLikeUserIds(getLikeUserIds(id));
+            film.setGenres(getGenres(id));
+            return film;
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
         }
-        final Film film = films.get(0);
-        film.setLikeUserIds(getLikeUserIds(id));
-        film.setGenres(getGenres(id));
-        return film;
     }
 
     private Set<Integer> getLikeUserIds(int id) {
