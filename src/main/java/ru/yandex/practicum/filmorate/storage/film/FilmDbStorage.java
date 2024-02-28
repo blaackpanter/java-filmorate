@@ -193,17 +193,18 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getFilmsSortByLike(int limit) {
-
         final List<Film> films = jdbcTemplate.query(
-                con -> con.prepareStatement(
-                        "SELECT * FROM films " +
-                                "LEFT JOIN (" +
-                                "SELECT film_id, COUNT(*) as countLikes " +
-                                "FROM films_users_likes GROUP BY film_id ORDER BY countLikes DESC" +
-                                ") as sortByLikes " +
-                                "ON films.id = sortByLikes.film_id LIMIT ?",
-                        limit
-                ),
+                con -> {
+                    final PreparedStatement ps = con.prepareStatement(
+                            "SELECT * FROM films " +
+                                    "LEFT JOIN (" +
+                                    "SELECT film_id, COUNT(*) as countLikes " +
+                                    "FROM films_users_likes GROUP BY film_id ORDER BY countLikes DESC" +
+                                    ") as sortByLikes " +
+                                    "ON films.id = sortByLikes.film_id LIMIT ?");
+                    ps.setInt(1, limit);
+                    return ps;
+                },
                 (rs, rowNum) -> extractFilm(rs)
         );
         for (Film film : films) {
