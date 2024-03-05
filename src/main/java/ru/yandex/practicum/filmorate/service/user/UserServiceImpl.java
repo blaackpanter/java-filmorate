@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService {
         }
         final User friend = userStorage.get(friendId);
         userStorage.update(addFriend(user, friend.getId()));
-        userStorage.update(addFriend(friend, user.getId()));
         return true;
     }
 
@@ -79,7 +78,6 @@ public class UserServiceImpl implements UserService {
         }
         final User friend = userStorage.get(friendId);
         userStorage.update(deleteFriend(user, friend.getId()));
-        userStorage.update(deleteFriend(friend, user.getId()));
         return true;
     }
 
