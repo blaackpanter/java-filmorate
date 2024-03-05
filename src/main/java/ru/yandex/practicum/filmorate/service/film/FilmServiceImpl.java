@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service.film;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class FilmServiceImpl implements FilmService {
     private static final LocalDate MIN_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
@@ -98,5 +100,11 @@ public class FilmServiceImpl implements FilmService {
         if (film.getReleaseDate().isBefore(MIN_DATE)) {
             throw new WrongFilmDateException(String.format("Дата релиза должна быть не раньше %s", MIN_DATE));
         }
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectorIdSorted(String directorId, String sortBy) {
+        log.info("Получение фильмов для режиссера с ID: {} отсортированных по: {}", directorId, sortBy);
+        return filmStorage.findByDirectorIdAndSortBy(directorId, sortBy);
     }
 }

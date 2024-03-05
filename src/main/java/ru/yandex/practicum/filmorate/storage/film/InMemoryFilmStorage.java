@@ -58,4 +58,9 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .limit(limit)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Film> findByDirectorIdAndSortBy(String directorId, String sortBy) {
+        throw new RuntimeException("No such implementation");
+    }
 }
