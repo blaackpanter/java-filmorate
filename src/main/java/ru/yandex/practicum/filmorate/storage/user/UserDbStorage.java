@@ -10,15 +10,8 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component

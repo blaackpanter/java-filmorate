@@ -14,11 +14,7 @@ import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.director.DirectorNotFoundException;
 import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
