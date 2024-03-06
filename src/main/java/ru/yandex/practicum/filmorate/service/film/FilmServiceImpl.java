@@ -99,6 +99,7 @@ public class FilmServiceImpl implements FilmService {
             throw new WrongFilmDateException(String.format("Дата релиза должна быть не раньше %s", MIN_DATE));
         }
     }
+
     @Override
     public List<Film> getCommonFilms(Integer firstUserId, Integer secondUserId) {
         return filmStorage.getCommonFilms(firstUserId, secondUserId);
