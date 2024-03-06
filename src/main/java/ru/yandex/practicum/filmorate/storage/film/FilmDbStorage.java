@@ -17,10 +17,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class FilmDbStorage implements FilmStorage {
@@ -207,5 +205,23 @@ public class FilmDbStorage implements FilmStorage {
             film.setGenres(getGenres(film.getId()));
         }
         return films;
+    }
+
+    @Override
+    public List<Film> getCommonFilms(int firstUserId, int secondUserId) {
+        String sqlQuery = "SELECT u.film_id " +
+                "FROM films_users_likes AS u " +
+                "INNER JOIN (SELECT film_id FROM films_users_likes WHERE user_id = ?) AS f " +
+                "ON u.film_id = f.film_id " +
+                "WHERE user_id = ?";
+
+        List<Integer> commonFilmIds = jdbcTemplate.queryForList(sqlQuery, Integer.class, firstUserId, secondUserId);
+        Set<Film> resultSet = new LinkedHashSet<>();
+        for (int i = 0; i <= commonFilmIds.size() - 1; i++) {
+            resultSet.add(get(commonFilmIds.get(i)));
+        }
+        return resultSet.stream()
+                .sorted((firstFilm, secondFilm) -> secondFilm.getLikeUserIds().size() - firstFilm.getLikeUserIds().size())
+                .collect(Collectors.toList());
     }
 }

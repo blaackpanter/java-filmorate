@@ -72,4 +72,12 @@ public class FilmController {
     public Film getFilms(@PathVariable("id") int id) {
         return filmService.getFilm(id);
     }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(
+            @RequestParam(value = "userId") int firstUserId,
+            @RequestParam(value = "friendId") int secondUserId) {
+        log.info("Возвращаем общий список фильмов пользователей {} и {}", firstUserId, secondUserId);
+        return filmService.getCommonFilms(firstUserId, secondUserId);
+    }
 }

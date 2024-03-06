@@ -58,4 +58,9 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .limit(limit)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Film> getCommonFilms(int firstUserId, int secondUserId) {
+        return null;
+    }
 }
