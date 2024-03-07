@@ -19,6 +19,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.sql.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class FilmDbStorage implements FilmStorage {
@@ -224,4 +229,59 @@ public class FilmDbStorage implements FilmStorage {
                 .sorted((firstFilm, secondFilm) -> secondFilm.getLikeUserIds().size() - firstFilm.getLikeUserIds().size())
                 .collect(Collectors.toList());
     }
+
+    private Set<Director> getDirectors(int filmId) {
+        final List<Director> directors = jdbcTemplate.query(
+                con -> {
+                    final PreparedStatement ps = con.prepareStatement("SELECT d.id, d.name FROM film_directors as fd LEFT JOIN directors as d ON fd.director_id = d.id WHERE fd.film_id = ?");
+                    ps.setInt(1, filmId);
+                    return ps;
+                },
+                (rs, rowNum) -> Director.builder()
+                        .id(rs.getInt(1))
+                        .name(rs.getString(2))
+                        .build()
+        );
+        return new HashSet<>(directors);
+    }
+
+    @Override
+    public List<Film> findByDirectorIdAndSortBy(String directorId, String sortBy) {
+        int count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM directors WHERE id = ?", Integer.class, directorId);
+        if (count == 0) {
+            throw new DirectorNotFoundException("Режиссер с ID " + directorId + " не найден");
+        }
+        String query = "SELECT f.id, f.name, f.description, f.release_date, f.duration, m.id, m.name, d.id, d.name " +
+                "FROM films AS f " +
+                "LEFT JOIN mpa_ratings AS m ON f.mpa_id = m.id " +
+                "LEFT JOIN film_directors AS fd ON f.id = fd.film_id " +
+                "LEFT JOIN directors AS d ON fd.director_id = d.id " +
+                "LEFT JOIN films_users_likes AS ful ON f.id = ful.film_id " +
+                "WHERE d.id = ? ";
+
+        switch (sortBy) {
+            case "year":
+                query += "GROUP BY f.id ORDER BY f.release_date ASC";
+                break;
+            case "likes":
+                query += "GROUP BY f.id ORDER BY COUNT(ful.user_id) DESC";
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid parameter");
+        }
+
+        return jdbcTemplate.query(query, new Object[]{directorId}, (rs, rowNum) -> {
+            Film film = extractFilm(rs);
+            Director director = Director.builder()
+                    .id(rs.getInt(8))
+                    .name(rs.getString(9))
+                    .build();
+            film.setDirectors(Collections.singleton(director));
+            film.setGenres(getGenres(film.getId()));
+            film.setLikeUserIds(getLikeUserIds(film.getId()));
+            return film;
+        });
+    }
+
+
 }

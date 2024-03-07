@@ -104,4 +104,10 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getCommonFilms(Integer firstUserId, Integer secondUserId) {
         return filmStorage.getCommonFilms(firstUserId, secondUserId);
     }
+
+    @Override
+    public List<Film> getFilmsByDirectorIdSorted(String directorId, String sortBy) {
+        log.info("Получение фильмов для режиссера с ID: {} отсортированных по: {}", directorId, sortBy);
+        return filmStorage.findByDirectorIdAndSortBy(directorId, sortBy);
+    }
 }

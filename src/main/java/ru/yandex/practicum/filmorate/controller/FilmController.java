@@ -80,4 +80,13 @@ public class FilmController {
         log.info("Возвращаем общий список фильмов пользователей {} и {}", firstUserId, secondUserId);
         return filmService.getCommonFilms(firstUserId, secondUserId);
     }
+
+    @GetMapping("/director/{directorId}")
+    public List<Film> getFilmsByDirectorIdSorted(
+            @PathVariable String directorId,
+            @RequestParam(defaultValue = "year") String sortBy
+    ) {
+        log.info("Получение фильмов режиссера с ID: {} отсортированному по: {}", directorId, sortBy);
+        return filmService.getFilmsByDirectorIdSorted(directorId, sortBy);
+    }
 }
