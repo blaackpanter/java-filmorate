@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.yandex.practicum.filmorate.service.film.WrongFilmDateException;
+import ru.yandex.practicum.filmorate.storage.director.DirectorNotFoundException;
 import ru.yandex.practicum.filmorate.storage.film.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.storage.genre.GenreNotFoundException;
 import ru.yandex.practicum.filmorate.storage.mpa_rating.MpaRatingNotFoundException;
@@ -38,7 +39,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(value = {UserNotFoundException.class, FilmNotFoundException.class, GenreNotFoundException.class, MpaRatingNotFoundException.class})
+    @ExceptionHandler(value = {UserNotFoundException.class, FilmNotFoundException.class, GenreNotFoundException.class, MpaRatingNotFoundException.class, DirectorNotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
         log.error("Ошибка, что объект не найден.", ex);
         return ResponseEntity

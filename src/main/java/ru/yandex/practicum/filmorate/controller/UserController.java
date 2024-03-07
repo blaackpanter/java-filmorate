@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Film;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
@@ -25,11 +25,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private final FilmService filmService;
 
-    public UserController(UserService userService, FilmService filmService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.filmService = filmService;
     }
 
     @PostMapping
@@ -80,11 +78,5 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUser(@PathVariable("id") int id) {
         return userService.getUser(id);
-    }
-
-    @GetMapping("/{id}/recommendations")
-    public List<Film> getRecommendedFilms(@PathVariable("id") int userId) {
-        return filmService.getRecommendedFilms(userId);
-
     }
 }
