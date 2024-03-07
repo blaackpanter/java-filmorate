@@ -107,7 +107,6 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getFilmsByDirectorIdSorted(String directorId, String sortBy) {
-        log.info("Получение фильмов для режиссера с ID: {} отсортированных по: {}", directorId, sortBy);
         return filmStorage.findByDirectorIdAndSortBy(directorId, sortBy);
     }
 }
