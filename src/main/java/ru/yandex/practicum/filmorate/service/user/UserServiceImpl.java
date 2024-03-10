@@ -112,6 +112,11 @@ public class UserServiceImpl implements UserService {
         return Set.copyOf(userStorage.get(commonIds));
     }
 
+    @Override
+    public boolean deleteUser(int id) {
+        return userStorage.deleteUser(id);
+    }
+
     private void checkName(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());

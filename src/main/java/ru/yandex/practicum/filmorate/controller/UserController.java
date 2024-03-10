@@ -70,4 +70,10 @@ public class UserController {
     public User getUser(@PathVariable("id") int id) {
         return userService.getUser(id);
     }
+
+
+    @DeleteMapping("/{id}")
+    public boolean deleteUser(@PathVariable("id") int id) {
+        return userService.deleteUser(id);
+    }
 }

@@ -107,4 +107,9 @@ public class FilmServiceImpl implements FilmService {
         log.info("Получение фильмов для режиссера с ID: {} отсортированных по: {}", directorId, sortBy);
         return filmStorage.findByDirectorIdAndSortBy(directorId, sortBy);
     }
+
+    @Override
+    public boolean deleteFilm(int id) {
+        return filmStorage.deleteFilm(id);
+    }
 }

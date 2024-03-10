@@ -24,4 +24,6 @@ public interface UserService {
     Set<User> getFriends(int id);
 
     Set<User> getCommonFriends(int id, int otherId);
+
+    boolean deleteUser(int id);
 }

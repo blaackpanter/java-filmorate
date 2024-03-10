@@ -18,4 +18,6 @@ public interface UserStorage {
     User update(User user);
 
     List<User> getAllUsers();
+
+    boolean deleteUser(int id);
 }
