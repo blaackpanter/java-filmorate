@@ -312,6 +312,7 @@ public class FilmDbStorage implements FilmStorage {
     public boolean deleteFilm(int id) {
         jdbcTemplate.update("DELETE FROM film_directors where film_id = ?", id);
         jdbcTemplate.update("DELETE FROM films_genres where film_id = ?", id);
+        jdbcTemplate.update("DELETE FROM films_users_likes where film_id = ?", id);
         jdbcTemplate.update("DELETE FROM films where id = ?", id);
         return true;
     }
