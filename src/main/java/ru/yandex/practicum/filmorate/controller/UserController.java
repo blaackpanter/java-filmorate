@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
@@ -16,9 +18,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final FilmService filmService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, FilmService filmService) {
         this.userService = userService;
+        this.filmService = filmService;
     }
 
     @PostMapping
@@ -75,5 +79,10 @@ public class UserController {
     @DeleteMapping("/{id}")
     public boolean deleteUser(@PathVariable("id") int id) {
         return userService.deleteUser(id);
+    }
+
+    @GetMapping("/{id}/recommendations")
+    public List<Film> getRecommendedFilms(@PathVariable("id") int userId) {
+        return filmService.getRecommendedFilms(userId);
     }
 }

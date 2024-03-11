@@ -3,14 +3,12 @@ package ru.yandex.practicum.filmorate.service.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -115,6 +113,34 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean deleteUser(int id) {
         return userStorage.deleteUser(id);
+    }
+
+    public User getMatchedUser(List<Film> films, User user) {
+        final int userId = user.getId();
+
+        Map<Integer, Integer> countUsersLike = new HashMap<>();
+
+        // проходим по фильмам, чтобы получить Map'у с ID пользователей и количеству лайков
+        films.stream()
+                // оставляем только фильмы, которым поставил лайк наш юзер
+                .filter(film -> film.getLikeUserIds().contains(userId))
+                // создаём стрим с id юзеров которые поставили лайк этим фильмам
+                .flatMap(film -> film.getLikeUserIds().stream())
+                // из полученного стрима удаляем id нашего юзера
+                .filter(likeUserId -> likeUserId != userId)
+                // наполняем Map'у ID юзеров
+                .forEach(reqUserId -> countUsersLike
+                        // и каждому проставляем количество вхождений в тот список выше
+                        .compute(reqUserId, (id, count) -> (count == null) ? 0 : count + 1));
+
+        Map.Entry<Integer, Integer> getUserMaxValue = countUsersLike.entrySet().stream()
+                .max((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                .orElse(null);
+
+        if (getUserMaxValue == null)
+            return null;
+        else
+            return getUser(getUserMaxValue.getKey());
     }
 
     private void checkName(User user) {
