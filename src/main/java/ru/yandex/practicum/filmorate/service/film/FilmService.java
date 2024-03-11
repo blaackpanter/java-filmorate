@@ -21,4 +21,6 @@ public interface FilmService {
     List<Film> getPopularFilms(int count);
 
     List<Film> getFilmsByDirectorIdSorted(String directorId, String sortBy);
+
+    List<Film> getRecommendedFilms(int userId);
 }

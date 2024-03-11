@@ -4,16 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -94,6 +93,28 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> getPopularFilms(int count) {
         return filmStorage.getFilmsSortByLike(count);
+    }
+
+    @Override
+    public List<Film> getRecommendedFilms(int userId) {
+        List<Film> films = getAllFilms();
+
+        User user = userService.getUser(userId);
+        User other = userService.getMatchedUser(films, user);
+
+        if (other == null)
+            return Collections.emptyList();
+
+        List<Film> otherFilms = films.stream()
+                .filter(film -> film.getLikeUserIds().contains(other.getId()))
+                .collect(Collectors.toList());
+        List<Film> userFilms = films.stream()
+                .filter(film -> film.getLikeUserIds().contains(user.getId()))
+                .collect(Collectors.toList());
+
+        otherFilms.removeAll(userFilms);
+
+        return otherFilms;
     }
 
     private void checkFilmReleaseDate(Film film) {
