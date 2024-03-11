@@ -45,5 +45,5 @@ build/
 *.db
 db/*
 
-### MacOs ###
+### MacOS ###
 .DS_Store
