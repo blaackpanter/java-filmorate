@@ -16,5 +16,7 @@ public interface FilmStorage {
 
     List<Film> getFilmsSortByLike(int limit);
 
+    List<Film> getCommonFilms(int firstUserId, int secondUserId);
+
     List<Film> findByDirectorIdAndSortBy(String directorId, String sortBy);
 }

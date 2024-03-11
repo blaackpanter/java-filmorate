@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service.film;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -15,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class FilmServiceImpl implements FilmService {
     private static final LocalDate MIN_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
@@ -124,8 +122,12 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
+    public List<Film> getCommonFilms(Integer firstUserId, Integer secondUserId) {
+        return filmStorage.getCommonFilms(firstUserId, secondUserId);
+    }
+
+    @Override
     public List<Film> getFilmsByDirectorIdSorted(String directorId, String sortBy) {
-        log.info("Получение фильмов для режиссера с ID: {} отсортированных по: {}", directorId, sortBy);
         return filmStorage.findByDirectorIdAndSortBy(directorId, sortBy);
     }
 }

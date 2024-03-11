@@ -60,6 +60,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
+    public List<Film> getCommonFilms(int firstUserId, int secondUserId) {
+        return null;
+    }
+
+    @Override
     public List<Film> findByDirectorIdAndSortBy(String directorId, String sortBy) {
         throw new RuntimeException("No such implementation");
     }

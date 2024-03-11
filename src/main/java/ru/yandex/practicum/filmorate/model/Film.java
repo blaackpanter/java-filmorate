@@ -17,7 +17,6 @@ import java.util.Set;
 @Data
 @Builder
 public class Film {
-
     @NotBlank
     @Size(max = 70)
     private final String name;
