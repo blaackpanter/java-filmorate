@@ -110,6 +110,11 @@ public class UserServiceImpl implements UserService {
         return Set.copyOf(userStorage.get(commonIds));
     }
 
+    @Override
+    public boolean deleteUser(int id) {
+        return userStorage.deleteUser(id);
+    }
+
     public User getMatchedUser(List<Film> films, User user) {
         final int userId = user.getId();
 

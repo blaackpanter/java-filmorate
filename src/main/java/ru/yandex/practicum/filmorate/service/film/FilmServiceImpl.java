@@ -130,4 +130,9 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getFilmsByDirectorIdSorted(String directorId, String sortBy) {
         return filmStorage.findByDirectorIdAndSortBy(directorId, sortBy);
     }
+
+    @Override
+    public boolean deleteFilm(int id) {
+        return filmStorage.deleteFilm(id);
+    }
 }

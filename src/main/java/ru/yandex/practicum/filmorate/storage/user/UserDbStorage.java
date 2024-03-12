@@ -143,4 +143,12 @@ public class UserDbStorage implements UserStorage {
         }
         return users;
     }
+
+    @Override
+    public boolean deleteUser(int id) {
+        jdbcTemplate.update("DELETE FROM films_users_likes where user_id = ?", id);
+        jdbcTemplate.update("DELETE FROM users_friend_list where from_user_id = ? OR to_user_id = ?", id, id);
+        jdbcTemplate.update("DELETE FROM users where id = ?", id);
+        return true;
+    }
 }
