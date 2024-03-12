@@ -30,7 +30,7 @@ public class Film {
     @NotNull
     private final MpaRating mpa;
     private int id;
-    private Set<Director> directors;
+    private Set<Director> directors = Collections.emptySet();
 
     private Set<Integer> likeUserIds = Collections.emptySet();
     private Set<Genre> genres = Collections.emptySet();

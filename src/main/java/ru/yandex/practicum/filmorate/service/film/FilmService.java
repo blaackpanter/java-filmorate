@@ -18,7 +18,7 @@ public interface FilmService {
 
     boolean deleteLike(int id, int userId);
 
-    List<Film> getPopularFilms(int count);
+    List<Film> getPopularFilms(Integer count, Integer genreId, Integer year);
 
     List<Film> getCommonFilms(Integer firstUserId, Integer secondUserId);
 

@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.director;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,15 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Component
 public class DirectorDbStorage implements DirectorStorage {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public DirectorDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Director save(Director director) {
