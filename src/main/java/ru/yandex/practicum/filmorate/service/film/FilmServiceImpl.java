@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.*;
 
 @Service
 public class FilmServiceImpl implements FilmService {
