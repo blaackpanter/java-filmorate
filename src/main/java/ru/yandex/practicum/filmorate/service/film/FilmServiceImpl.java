@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.event.EventService;
+import ru.yandex.practicum.filmorate.service.event.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -19,16 +19,16 @@ public class FilmServiceImpl implements FilmService {
     private static final LocalDate MIN_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
     private final UserService userService;
-    private final EventService eventService;
+    private final EventServiceImpl eventServiceImpl;
 
     @Autowired
     public FilmServiceImpl(
             FilmStorage filmStorage,
             UserService userService,
-            EventService eventService) {
+            EventServiceImpl eventServiceImpl) {
         this.filmStorage = filmStorage;
         this.userService = userService;
-        this.eventService = eventService;
+        this.eventServiceImpl = eventServiceImpl;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class FilmServiceImpl implements FilmService {
         likeUserIds.add(userId);
         film.setLikeUserIds(Set.copyOf(likeUserIds));
         filmStorage.update(film);
-        eventService.createAddLikeEvent(userId, id);
+        eventServiceImpl.createAddLikeEvent(userId, id);
         return true;
     }
 
@@ -89,7 +89,7 @@ public class FilmServiceImpl implements FilmService {
         likeUserIds.remove(userId);
         film.setLikeUserIds(Set.copyOf(likeUserIds));
         filmStorage.update(film);
-        eventService.createRemoveLikeEvent(userId, id);
+        eventServiceImpl.createRemoveLikeEvent(userId, id);
         return true;
     }
 

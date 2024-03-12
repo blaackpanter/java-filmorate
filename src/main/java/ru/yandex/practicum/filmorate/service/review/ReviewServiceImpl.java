@@ -49,10 +49,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review updateReview(Review review) {
-        if (reviewStorage.readReview(review.getReviewId()) == null) {
+        Review reviewLoaded = reviewStorage.readReview(review.getReviewId());
+        if (reviewLoaded == null) {
             throw new ReviewNotFoundException("Отзыв не найден в БД.");
         }
-        eventService.createReviewEvent(review.getUserId(), OperationType.UPDATE, review.getReviewId());
+        eventService.createReviewEvent(reviewLoaded.getUserId(), OperationType.UPDATE, reviewLoaded.getReviewId());
         return reviewStorage.updateReview(review);
     }
 
