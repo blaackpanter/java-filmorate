@@ -63,6 +63,11 @@ public class InMemoryUserStorage implements UserStorage {
         return List.copyOf(users.values());
     }
 
+    @Override
+    public boolean deleteUser(int id) {
+        return users.remove(id) != null;
+    }
+
     private void checkName(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());

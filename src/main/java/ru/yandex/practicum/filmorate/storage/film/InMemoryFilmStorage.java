@@ -65,4 +65,9 @@ public class InMemoryFilmStorage implements FilmStorage {
     public List<Film> findByDirectorIdAndSortBy(String directorId, String sortBy) {
         throw new RuntimeException("No such implementation");
     }
+
+    @Override
+    public boolean deleteFilm(int id) {
+        return films.remove(id) != null;
+    }
 }

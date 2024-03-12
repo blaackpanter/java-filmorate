@@ -74,6 +74,7 @@ public class FilmDbStorage implements FilmStorage {
             );
             film.setLikeUserIds(getLikeUserIds(id));
             film.setGenres(getGenres(id));
+            film.setDirectors(getDirectors(id)); // Add method to get directors for film
             return film;
         } catch (EmptyResultDataAccessException e) {
             throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s ", id));
@@ -285,5 +286,12 @@ public class FilmDbStorage implements FilmStorage {
         });
     }
 
-
+    @Override
+    public boolean deleteFilm(int id) {
+        jdbcTemplate.update("DELETE FROM film_directors where film_id = ?", id);
+        jdbcTemplate.update("DELETE FROM films_genres where film_id = ?", id);
+        jdbcTemplate.update("DELETE FROM films_users_likes where film_id = ?", id);
+        jdbcTemplate.update("DELETE FROM films where id = ?", id);
+        return true;
+    }
 }

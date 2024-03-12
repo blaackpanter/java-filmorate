@@ -23,4 +23,8 @@ public interface FilmService {
     List<Film> getCommonFilms(Integer firstUserId, Integer secondUserId);
 
     List<Film> getFilmsByDirectorIdSorted(String directorId, String sortBy);
+
+    boolean deleteFilm(int id);
+
+    List<Film> getRecommendedFilms(int userId);
 }
