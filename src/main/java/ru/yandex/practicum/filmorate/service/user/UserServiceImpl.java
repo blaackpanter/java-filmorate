@@ -1,10 +1,11 @@
 package ru.yandex.practicum.filmorate.service.user;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -12,9 +13,15 @@ import java.util.*;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
+    private final EventService eventService;
+
+    @Autowired
+    public UserServiceImpl(UserStorage userStorage, EventService eventService) {
+        this.userStorage = userStorage;
+        this.eventService = eventService;
+    }
 
     @Override
     public User add(User user) {
@@ -61,6 +68,7 @@ public class UserServiceImpl implements UserService {
         final HashSet<Integer> friendIds = new HashSet<>(user.getFriends());
         friendIds.add(friendId);
         user.setFriends(Set.copyOf(friendIds));
+        eventService.createAddFriendEvent(user.getId(), friendId);
         return user;
     }
 
@@ -72,6 +80,7 @@ public class UserServiceImpl implements UserService {
         }
         final User friend = userStorage.get(friendId);
         userStorage.update(deleteFriend(user, friend.getId()));
+        eventService.createRemoveFriendEvent(id, friendId);
         return true;
     }
 
