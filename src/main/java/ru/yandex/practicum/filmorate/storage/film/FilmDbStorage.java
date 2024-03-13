@@ -70,7 +70,7 @@ public class FilmDbStorage implements FilmStorage {
             for (Director director : directors) {
                 jdbcTemplate.update(
                         "INSERT INTO film_directors (film_id , director_id) VALUES (? , ?)",
-                        film.getId(),
+                        id,
                         director.getId()
                 );
             }
