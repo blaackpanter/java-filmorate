@@ -181,6 +181,23 @@ public class FilmDbStorage implements FilmStorage {
         } else {
             film.setGenres(Collections.emptySet());
         }
+
+        final Set<Director> directors = film.getDirectors();
+        if (directors != null) {
+            jdbcTemplate.update(
+                    "DELETE FROM films_genres WHERE film_id = ?",
+                    film.getId()
+            );
+            for (Director director : directors) {
+                jdbcTemplate.update(
+                        "INSERT INTO film_directors (film_id , director_id) VALUES (? , ?)",
+                        film.getId(),
+                        director.getId()
+                );
+            }
+        } else {
+            film.setDirectors(Collections.emptySet());
+        }
         return get(film.getId());
     }
 
