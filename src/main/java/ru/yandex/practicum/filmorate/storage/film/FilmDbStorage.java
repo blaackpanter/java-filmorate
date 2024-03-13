@@ -303,7 +303,7 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN directors d ON fd.director_id = d.id " +
                 "LEFT JOIN mpa_ratings as m ON f.mpa_id = m.id ";
 
-        final String pattern = "'%" + query + "%'";
+        final String pattern = "'%" + query.toLowerCase() + "%'";
         sqlQuery += search.stream()
                 .map(
                         searchBy -> {
