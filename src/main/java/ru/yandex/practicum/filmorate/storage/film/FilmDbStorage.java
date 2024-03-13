@@ -65,6 +65,16 @@ public class FilmDbStorage implements FilmStorage {
                 );
             }
         }
+        final Set<Director> directors = film.getDirectors();
+        if (directors != null) {
+            for (Director director : directors) {
+                jdbcTemplate.update(
+                        "INSERT INTO film_directors (film_id , director_id) VALUES (? , ?)",
+                        film.getId(),
+                        director.getId()
+                );
+            }
+        }
         return get(id);
     }
 
@@ -210,6 +220,7 @@ public class FilmDbStorage implements FilmStorage {
         for (Film film : films) {
             film.setLikeUserIds(getLikeUserIds(film.getId()));
             film.setGenres(getGenres(film.getId()));
+            film.setDirectors(getDirectors(film.getId()));
         }
         return films;
     }
