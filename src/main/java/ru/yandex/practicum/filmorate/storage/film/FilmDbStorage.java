@@ -185,7 +185,7 @@ public class FilmDbStorage implements FilmStorage {
         final Set<Director> directors = film.getDirectors();
         if (directors != null) {
             jdbcTemplate.update(
-                    "DELETE FROM films_genres WHERE film_id = ?",
+                    "DELETE FROM film_directors WHERE film_id = ?",
                     film.getId()
             );
             for (Director director : directors) {
