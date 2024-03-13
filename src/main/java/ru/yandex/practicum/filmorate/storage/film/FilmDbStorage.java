@@ -192,12 +192,12 @@ public class FilmDbStorage implements FilmStorage {
             film.setGenres(Collections.emptySet());
         }
 
+        jdbcTemplate.update(
+                "DELETE FROM film_directors WHERE film_id = ?",
+                film.getId()
+        );
         final Set<Director> directors = film.getDirectors();
         if (directors != null) {
-            jdbcTemplate.update(
-                    "DELETE FROM film_directors WHERE film_id = ?",
-                    film.getId()
-            );
             for (Director director : directors) {
                 jdbcTemplate.update(
                         "INSERT INTO film_directors (film_id , director_id) VALUES (? , ?)",
