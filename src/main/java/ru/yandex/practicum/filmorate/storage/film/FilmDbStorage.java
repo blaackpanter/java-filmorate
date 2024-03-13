@@ -309,9 +309,9 @@ public class FilmDbStorage implements FilmStorage {
                         searchBy -> {
                             switch (searchBy) {
                                 case DIRECTOR:
-                                    return "d.name LIKE " + pattern;
+                                    return "LOWER(d.name) LIKE " + pattern;
                                 case TITLE:
-                                    return "f.name LIKE " + pattern;
+                                    return "LOWER(f.name) LIKE " + pattern;
                                 default:
                                     throw new UnsupportedOperationException(searchBy + " not implemented");
                             }
