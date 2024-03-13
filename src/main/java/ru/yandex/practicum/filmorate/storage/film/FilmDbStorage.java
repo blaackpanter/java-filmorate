@@ -323,11 +323,7 @@ public class FilmDbStorage implements FilmStorage {
                 sqlQuery,
                 (rs, rowNum) -> {
                     Film film = extractFilm(rs);
-                    Director director = Director.builder()
-                            .id(rs.getInt(8))
-                            .name(rs.getString(9))
-                            .build();
-                    film.setDirectors(Collections.singleton(director));
+                    film.setDirectors(getDirectors(film.getId()));
                     film.setGenres(getGenres(film.getId()));
                     film.setLikeUserIds(getLikeUserIds(film.getId()));
                     return film;
