@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service.film;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.SearchBy;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.event.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.user.UserService;
@@ -139,5 +140,13 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public boolean deleteFilm(int id) {
         return filmStorage.deleteFilm(id);
+    }
+
+    @Override
+    public List<Film> getFilmsWithQuery(String query, List<SearchBy> search) {
+        if (query.isBlank()) {
+            return new ArrayList<>();
+        }
+        return filmStorage.getFilmsWithQuery(query, search);
     }
 }
