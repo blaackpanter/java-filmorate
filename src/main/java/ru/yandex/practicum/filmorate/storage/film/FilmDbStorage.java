@@ -345,7 +345,7 @@ public class FilmDbStorage implements FilmStorage {
                             }
                         }
                 )
-                .collect(Collectors.joining(" AND ", "WHERE ", ""));
+                .collect(Collectors.joining(" OR ", "WHERE ", ""));
         sqlQuery += " GROUP BY f.id";
         return jdbcTemplate.query(
                 sqlQuery,
