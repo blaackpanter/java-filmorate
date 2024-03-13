@@ -147,6 +147,9 @@ public class FilmServiceImpl implements FilmService {
         if (query.isBlank()) {
             return new ArrayList<>();
         }
-        return filmStorage.getFilmsWithQuery(query, search);
+        List<Film> filmsWithQuery = filmStorage.getFilmsWithQuery(query, search);
+        return filmsWithQuery.stream()
+                .sorted((o1, o2) -> -Integer.compare(o1.getLikeUserIds().size(), o2.getLikeUserIds().size()))
+                .collect(Collectors.toList());
     }
 }
