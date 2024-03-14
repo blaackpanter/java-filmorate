@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.SearchBy;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -72,5 +73,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public boolean deleteFilm(int id) {
         return films.remove(id) != null;
+    }
+
+    @Override
+    public List<Film> getFilmsWithQuery(String query, List<SearchBy> search) {
+        throw new RuntimeException("No such implementation");
     }
 }
