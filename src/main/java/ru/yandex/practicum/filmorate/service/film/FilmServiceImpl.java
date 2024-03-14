@@ -67,6 +67,7 @@ public class FilmServiceImpl implements FilmService {
         }
         final Film film = filmStorage.get(id);
         if (film.getLikeUserIds().contains(userId)) {
+            eventServiceImpl.createAddLikeEvent(userId, id);
             return false;
         }
         final Set<Integer> likeUserIds = new HashSet<>(film.getLikeUserIds());
