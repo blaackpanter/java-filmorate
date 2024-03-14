@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.model.SearchBy;
 import ru.yandex.practicum.filmorate.storage.director.DirectorNotFoundException;
+import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import java.sql.Date;
@@ -27,14 +28,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Component
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final GenreStorage genreStorage;
 
 
     @Override
@@ -226,21 +224,23 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getFilmsSortByLike(int limit) {
-        final List<Film> films = jdbcTemplate.query(
-                con -> {
-                    final PreparedStatement ps = con.prepareStatement(
-                            "SELECT f.id, f.name , f.description , f.release_date , f.duration, m.id, m.name, sortByLikes.countLikes FROM films as f LEFT JOIN (SELECT film_id, COUNT(*) as countLikes FROM films_users_likes GROUP BY film_id) as sortByLikes ON f.id = sortByLikes.film_id LEFT JOIN mpa_ratings as m ON f.mpa_id = m.id ORDER BY countLikes DESC LIMIT ?");
-                    ps.setInt(1, limit);
-                    return ps;
-                },
-                (rs, rowNum) -> extractFilm(rs)
-        );
-        for (Film film : films) {
-            film.setLikeUserIds(getLikeUserIds(film.getId()));
-            film.setGenres(getGenres(film.getId()));
+    public List<Film> getPopularFilms(Integer count, Integer genreId, Integer year) {
+        List<Film> popularFilmList = getAllFilms();
+        if (genreId != null) {
+            Genre genre = genreStorage.get(genreId);
+            popularFilmList = popularFilmList.stream()
+                    .filter(film -> film.getGenres().contains(genre))
+                    .collect(Collectors.toList());
         }
-        return films;
+        if (year != null) {
+            popularFilmList = popularFilmList.stream()
+                    .filter(film -> film.getReleaseDate().getYear() == year)
+                    .collect(Collectors.toList());
+        }
+        return popularFilmList.stream()
+                .sorted((film1, film2) -> film2.getLikeUserIds().size() - film1.getLikeUserIds().size())
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
     @Override

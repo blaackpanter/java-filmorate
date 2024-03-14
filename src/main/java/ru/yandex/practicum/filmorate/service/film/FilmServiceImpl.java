@@ -95,8 +95,8 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getPopularFilms(int count) {
-        return filmStorage.getFilmsSortByLike(count);
+    public List<Film> getPopularFilms(Integer count, Integer genreId, Integer year) {
+        return filmStorage.getPopularFilms(count, genreId, year);
     }
 
     @Override

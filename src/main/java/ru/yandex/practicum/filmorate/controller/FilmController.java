@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,13 +23,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmService;
-
-    @Autowired
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
-    }
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
@@ -64,11 +60,11 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(value = "count", required = false, defaultValue = "0") int count) {
-        if (count == 0) {
-            count = 10;
-        }
-        return filmService.getPopularFilms(count);
+    public List<Film> getPopularFilms(
+            @RequestParam(defaultValue = "10", required = false) Integer count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year) {
+        return filmService.getPopularFilms(count, genreId, year);
     }
 
     @GetMapping("/{id}")
