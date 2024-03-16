@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * Review.
@@ -14,7 +13,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class Review {
     private Integer reviewId;
-    @Size(min = 1)
+    @NotNull(message = "The content cannot be empty")
     @NotBlank(message = "The content cannot be empty")
     private String content;
     @NotBlank(message = "The isPositive cannot be empty")
