@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
@@ -140,6 +141,7 @@ public class UserDbStorage implements UserStorage {
         return users;
     }
 
+    @Transactional
     @Override
     public boolean deleteUser(int id) {
         jdbcTemplate.update("DELETE FROM films_users_likes where user_id = ?", id);
