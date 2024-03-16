@@ -3,11 +3,9 @@ package ru.yandex.practicum.filmorate.storage.film;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.SearchBy;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -49,7 +47,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getFilmsSortByLike(int limit) {
+    public List<Film> getPopularFilms(Integer limit, Integer genreId, Integer year) {
         return films.values().stream()
                 .sorted(
                         Comparator.<Film>comparingInt(film -> film.getLikeUserIds().size())
@@ -60,7 +58,22 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
+    public List<Film> getCommonFilms(int firstUserId, int secondUserId) {
+        return null;
+    }
+
+    @Override
     public List<Film> findByDirectorIdAndSortBy(String directorId, String sortBy) {
+        throw new RuntimeException("No such implementation");
+    }
+
+    @Override
+    public boolean deleteFilm(int id) {
+        return films.remove(id) != null;
+    }
+
+    @Override
+    public List<Film> getFilmsWithQuery(String query, List<SearchBy> search) {
         throw new RuntimeException("No such implementation");
     }
 }

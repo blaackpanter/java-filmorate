@@ -26,5 +26,7 @@ public interface UserService {
 
     Set<User> getCommonFriends(int id, int otherId);
 
+    boolean deleteUser(int id);
+
     User getMatchedUser(List<Film> films, User user);
 }

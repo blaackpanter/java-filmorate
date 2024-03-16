@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
@@ -14,14 +14,10 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Component
 public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public UserDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public User add(User user) {
@@ -142,5 +138,13 @@ public class UserDbStorage implements UserStorage {
             user.setFriends(getFriendIds(user.getId()));
         }
         return users;
+    }
+
+    @Override
+    public boolean deleteUser(int id) {
+        jdbcTemplate.update("DELETE FROM films_users_likes where user_id = ?", id);
+        jdbcTemplate.update("DELETE FROM users_friend_list where from_user_id = ? OR to_user_id = ?", id, id);
+        jdbcTemplate.update("DELETE FROM users where id = ?", id);
+        return true;
     }
 }

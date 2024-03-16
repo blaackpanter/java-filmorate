@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.model.enums.OperationType;
+import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.storage.film.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.review.ReviewNotFoundException;
@@ -20,6 +22,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewStorage reviewStorage;
     private final UserStorage userStorage;
     private final FilmStorage filmStorage;
+    private final EventService eventService;
 
     @Override
     public Review createReview(Review review) {
@@ -27,7 +30,9 @@ public class ReviewServiceImpl implements ReviewService {
             throw new FilmNotFoundException("Фильм с id " + review.getFilmId() + " не найден в БД.");
         if (userStorage.get(review.getUserId()) == null)
             throw new UserNotFoundException("Пользователь с id " + review.getUserId() + " не найден в БД.");
-        return reviewStorage.createReview(review);
+        Review createdReview = reviewStorage.createReview(review);
+        eventService.createReviewEvent(createdReview.getUserId(), OperationType.ADD, createdReview.getReviewId());
+        return createdReview;
     }
 
     @Override
@@ -44,15 +49,22 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review updateReview(Review review) {
-        if (reviewStorage.readReview(review.getReviewId()) == null)
+        Review reviewLoaded = reviewStorage.readReview(review.getReviewId());
+        if (reviewLoaded == null) {
             throw new ReviewNotFoundException("Отзыв не найден в БД.");
-
+        }
+        eventService.createReviewEvent(reviewLoaded.getUserId(), OperationType.UPDATE, reviewLoaded.getReviewId());
         return reviewStorage.updateReview(review);
     }
 
     @Override
     public boolean deleteReview(int id) {
-        return reviewStorage.deleteReview(id);
+        Review review = reviewStorage.readReview(id);
+        if (review == null) {
+            throw new ReviewNotFoundException("Отзыв не найден в БД.");
+        }
+        eventService.createReviewEvent(review.getUserId(), OperationType.REMOVE, review.getReviewId());
+        return reviewStorage.deleteReview(review.getReviewId());
     }
 
     @Override

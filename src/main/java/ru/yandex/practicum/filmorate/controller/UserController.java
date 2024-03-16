@@ -1,12 +1,13 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.service.user.UserService;
-
 import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
@@ -19,10 +20,12 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
     private final FilmService filmService;
+    private final EventService eventService;
 
-    public UserController(UserService userService, FilmService filmService) {
+    public UserController(UserService userService, FilmService filmService, EventService eventService) {
         this.userService = userService;
         this.filmService = filmService;
+        this.eventService = eventService;
     }
 
     @PostMapping
@@ -75,8 +78,19 @@ public class UserController {
         return userService.getUser(id);
     }
 
+
+    @DeleteMapping("/{id}")
+    public boolean deleteUser(@PathVariable("id") int id) {
+        return userService.deleteUser(id);
+    }
+
     @GetMapping("/{id}/recommendations")
     public List<Film> getRecommendedFilms(@PathVariable("id") int userId) {
         return filmService.getRecommendedFilms(userId);
+    }
+
+    @GetMapping("/{id}/feed")
+    public List<Event> getFeed(@PathVariable Integer id) {
+        return eventService.findEventsByUserId(id);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -14,10 +15,12 @@ import java.util.*;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
+    private final EventService eventService;
 
     @Autowired
-    public UserServiceImpl(UserStorage userStorage) {
+    public UserServiceImpl(UserStorage userStorage, EventService eventService) {
         this.userStorage = userStorage;
+        this.eventService = eventService;
     }
 
     @Override
@@ -65,6 +68,7 @@ public class UserServiceImpl implements UserService {
         final HashSet<Integer> friendIds = new HashSet<>(user.getFriends());
         friendIds.add(friendId);
         user.setFriends(Set.copyOf(friendIds));
+        eventService.createAddFriendEvent(user.getId(), friendId);
         return user;
     }
 
@@ -76,6 +80,7 @@ public class UserServiceImpl implements UserService {
         }
         final User friend = userStorage.get(friendId);
         userStorage.update(deleteFriend(user, friend.getId()));
+        eventService.createRemoveFriendEvent(id, friendId);
         return true;
     }
 
@@ -108,6 +113,11 @@ public class UserServiceImpl implements UserService {
         final Set<Integer> commonIds = new HashSet<>(user.getFriends());
         commonIds.retainAll(other.getFriends());
         return Set.copyOf(userStorage.get(commonIds));
+    }
+
+    @Override
+    public boolean deleteUser(int id) {
+        return userStorage.deleteUser(id);
     }
 
     public User getMatchedUser(List<Film> films, User user) {
