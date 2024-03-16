@@ -39,7 +39,8 @@ public class ReviewStorageImpl implements ReviewStorage {
             log.info("В таблице REVIEWS успешно создана запись с ID {}.", review.getReviewId());
         } catch (Exception e) {
             log.warn("Попытка создания записи в таблице REVIEWS. Запрос: {}. Ошибка: {}.",
-                    sqlQuery, e.getMessage());
+                    sqlQuery, "Ошибка: " + e.getMessage());
+            throw e;
         }
 
         return review;

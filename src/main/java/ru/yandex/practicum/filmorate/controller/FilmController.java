@@ -16,6 +16,8 @@ import ru.yandex.practicum.filmorate.model.SearchBy;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,7 +97,7 @@ public class FilmController {
     }
 
     @GetMapping("/search")
-    public List<Film> getFilmsWithQuery(@RequestParam("query") String query,
+    public List<Film> getFilmsWithQuery(@RequestParam("query") @NotNull @NotBlank String query,
                                         @RequestParam("by") String byList) {
         return filmService.getFilmsWithQuery(query, parseSearchBy(byList));
     }
