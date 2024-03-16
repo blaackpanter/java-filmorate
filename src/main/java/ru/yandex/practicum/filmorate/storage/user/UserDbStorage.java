@@ -1,34 +1,25 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Component
 public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public UserDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public User add(User user) {
@@ -60,7 +51,7 @@ public class UserDbStorage implements UserStorage {
             );
             return count != null && count > 0;
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s", id));
         }
     }
 
@@ -74,7 +65,7 @@ public class UserDbStorage implements UserStorage {
             user.setFriends(getFriendIds(id));
             return user;
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s", id));
         }
     }
 
@@ -119,7 +110,7 @@ public class UserDbStorage implements UserStorage {
                 user.getId()
         );
         if (update == 0) {
-            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", user.getId()));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s", user.getId()));
         }
         final Set<Integer> friendIds = user.getFriends();
         if (friendIds != null && !friendIds.isEmpty()) {
@@ -149,5 +140,14 @@ public class UserDbStorage implements UserStorage {
             user.setFriends(getFriendIds(user.getId()));
         }
         return users;
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteUser(int id) {
+        jdbcTemplate.update("DELETE FROM films_users_likes where user_id = ?", id);
+        jdbcTemplate.update("DELETE FROM users_friend_list where from_user_id = ? OR to_user_id = ?", id, id);
+        jdbcTemplate.update("DELETE FROM users where id = ?", id);
+        return true;
     }
 }
