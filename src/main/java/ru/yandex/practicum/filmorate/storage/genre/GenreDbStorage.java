@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.sql.ResultSet;
@@ -23,7 +24,7 @@ public class GenreDbStorage implements GenreStorage {
                     (rs, num) -> extractGenre(rs)
             );
         } catch (EmptyResultDataAccessException e) {
-            throw new GenreNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s", id));
         }
     }
 

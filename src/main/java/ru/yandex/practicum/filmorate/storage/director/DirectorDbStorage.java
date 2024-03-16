@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Director;
 
 import java.sql.PreparedStatement;
@@ -43,7 +44,7 @@ public class DirectorDbStorage implements DirectorStorage {
                     new Object[]{id},
                     (rs, num) -> Director.builder().id(rs.getInt(1)).name(rs.getString(2)).build());
         } catch (EmptyResultDataAccessException e) {
-            throw new DirectorNotFoundException(String.format("Директор с id %d не найден", id));
+            throw new NotFoundException(String.format("Директор с id %d не найден", id));
         }
     }
 
@@ -70,7 +71,7 @@ public class DirectorDbStorage implements DirectorStorage {
             );
             return director;
         } catch (EmptyResultDataAccessException e) {
-            throw new DirectorNotFoundException(String.format("Режиссер с ID %d не найден", director.getId()));
+            throw new NotFoundException(String.format("Режиссер с ID %d не найден", director.getId()));
         }
     }
 

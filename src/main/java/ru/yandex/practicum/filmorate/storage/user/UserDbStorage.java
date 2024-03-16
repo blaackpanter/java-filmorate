@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
@@ -50,7 +51,7 @@ public class UserDbStorage implements UserStorage {
             );
             return count != null && count > 0;
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s", id));
         }
     }
 
@@ -64,7 +65,7 @@ public class UserDbStorage implements UserStorage {
             user.setFriends(getFriendIds(id));
             return user;
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s", id));
         }
     }
 
@@ -109,7 +110,7 @@ public class UserDbStorage implements UserStorage {
                 user.getId()
         );
         if (update == 0) {
-            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s", user.getId()));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s", user.getId()));
         }
         final Set<Integer> friendIds = user.getFriends();
         if (friendIds != null && !friendIds.isEmpty()) {

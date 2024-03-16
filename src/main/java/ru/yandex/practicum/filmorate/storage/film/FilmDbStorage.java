@@ -7,25 +7,13 @@ import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.model.SearchBy;
-import ru.yandex.practicum.filmorate.storage.director.DirectorNotFoundException;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -88,7 +76,7 @@ public class FilmDbStorage implements FilmStorage {
             film.setDirectors(getDirectors(id)); // Add method to get directors for film
             return film;
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(String.format("Не найдено пользователя с id = %s ", id));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s ", id));
         }
     }
 
@@ -155,7 +143,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getId()
         );
         if (update == 0) {
-            throw new FilmNotFoundException(String.format("Не найдено фильма с id = %s", film.getId()));
+            throw new NotFoundException(String.format("Не найдено фильма с id = %s", film.getId()));
         }
         final Set<Integer> likeUserIds = film.getLikeUserIds();
         if (likeUserIds != null) {
@@ -280,7 +268,7 @@ public class FilmDbStorage implements FilmStorage {
     public List<Film> findByDirectorIdAndSortBy(String directorId, String sortBy) {
         int count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM directors WHERE id = ?", Integer.class, directorId);
         if (count == 0) {
-            throw new DirectorNotFoundException("Режиссер с ID " + directorId + " не найден");
+            throw new NotFoundException("Режиссер с ID " + directorId + " не найден");
         }
         String query = "SELECT f.id, f.name, f.description, f.release_date, f.duration, m.id, m.name, d.id, d.name " +
                 "FROM films AS f " +
