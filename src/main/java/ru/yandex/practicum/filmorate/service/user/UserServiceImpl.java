@@ -3,10 +3,10 @@ package ru.yandex.practicum.filmorate.service.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.event.EventService;
-import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         if (getAllUsers().isEmpty()) {
-            throw new UserNotFoundException("Пользователей не найдено, чтобы обновить сначала необходимо добавить пользователя");
+            throw new NotFoundException("Пользователей не найдено, чтобы обновить сначала необходимо добавить пользователя");
         }
         checkName(user);
         return userStorage.update(user);

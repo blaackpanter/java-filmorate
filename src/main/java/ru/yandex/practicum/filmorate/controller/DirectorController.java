@@ -24,7 +24,7 @@ public class DirectorController {
     }
 
     @GetMapping("/{id}")
-    public Director getDirectorById(@PathVariable String id) {
+    public Director getDirectorById(@Valid @PathVariable String id) {
         log.info("Fetching director with ID: {}", id);
         return directorService.getDirectorById(id);
     }

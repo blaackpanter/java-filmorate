@@ -5,10 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.enums.EventType;
 import ru.yandex.practicum.filmorate.model.enums.OperationType;
-import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.sql.PreparedStatement;
@@ -52,7 +52,7 @@ public class EventDbStorage implements EventStorage {
     public List<Event> findEventsByUserID(Integer id) {
 
         if (!userStorage.userExist(id)) {
-            throw new UserNotFoundException("Такого пользователя не существует");
+            throw new NotFoundException("Такого пользователя не существует");
         }
         String sql = "SELECT * FROM EVENTS WHERE USER_ID = ?";
         return jdbcTemplate.query(sql, this::mapToEvent, id);

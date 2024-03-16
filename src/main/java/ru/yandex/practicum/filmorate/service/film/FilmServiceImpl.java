@@ -2,14 +2,13 @@ package ru.yandex.practicum.filmorate.service.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.SearchBy;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.event.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.user.UserService;
-import ru.yandex.practicum.filmorate.storage.film.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -46,7 +45,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film update(Film film) {
         if (getAllFilms().isEmpty()) {
-            throw new FilmNotFoundException("Фильмов не найдено, чтобы обновить сначала необходимо добавить фильм");
+            throw new NotFoundException("Фильмов не найдено, чтобы обновить сначала необходимо добавить фильм");
         }
         if (film.getLikeUserIds() == null) {
             film.setLikeUserIds(Collections.emptySet());
@@ -63,7 +62,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public boolean addLike(int id, int userId) {
         if (!userService.userExist(userId)) {
-            throw new UserNotFoundException("Невозможно поставить лайк пользователем, которого не существует");
+            throw new NotFoundException("Невозможно поставить лайк пользователем, которого не существует");
         }
         final Film film = filmStorage.get(id);
         if (film.getLikeUserIds().contains(userId)) {
@@ -81,7 +80,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public boolean deleteLike(int id, int userId) {
         if (!userService.userExist(userId)) {
-            throw new UserNotFoundException("Невозможно поставить лайк пользователем, которого не существует");
+            throw new NotFoundException("Невозможно поставить лайк пользователем, которого не существует");
         }
         final Film film = filmStorage.get(id);
         if (!film.getLikeUserIds().contains(userId)) {
