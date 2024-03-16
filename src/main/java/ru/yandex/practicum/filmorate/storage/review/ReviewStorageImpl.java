@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
 
 import java.sql.PreparedStatement;
@@ -62,7 +63,7 @@ public class ReviewStorageImpl implements ReviewStorage {
                     "Запрос: " + sqlQuery
                     + "Ошибка: " + e.getMessage();
             log.warn(warning);
-            throw new ReviewNotFoundException(warning);
+            throw new NotFoundException(warning);
         }
 
         return review;
@@ -108,7 +109,7 @@ public class ReviewStorageImpl implements ReviewStorage {
             String warning = "Попытка обновления записи в таблице REVIEWS. " +
                     "Запрос: " + sqlQuery;
             log.warn(warning);
-            throw new ReviewNotFoundException(warning);
+            throw new NotFoundException(warning);
         }
 
         log.info("В таблице REVIEW обновление записи с ID {}.",

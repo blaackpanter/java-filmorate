@@ -3,14 +3,12 @@ package ru.yandex.practicum.filmorate.service.review;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.model.enums.OperationType;
 import ru.yandex.practicum.filmorate.service.event.EventService;
-import ru.yandex.practicum.filmorate.storage.film.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.review.ReviewNotFoundException;
 import ru.yandex.practicum.filmorate.storage.review.ReviewStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
@@ -27,9 +25,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review createReview(Review review) {
         if (filmStorage.get(review.getFilmId()) == null)
-            throw new FilmNotFoundException("Фильм с id " + review.getFilmId() + " не найден в БД.");
+            throw new NotFoundException("Фильм с id " + review.getFilmId() + " не найден в БД.");
         if (userStorage.get(review.getUserId()) == null)
-            throw new UserNotFoundException("Пользователь с id " + review.getUserId() + " не найден в БД.");
+            throw new NotFoundException("Пользователь с id " + review.getUserId() + " не найден в БД.");
         Review createdReview = reviewStorage.createReview(review);
         eventService.createReviewEvent(createdReview.getUserId(), OperationType.ADD, createdReview.getReviewId());
         return createdReview;
@@ -51,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
     public Review updateReview(Review review) {
         Review reviewLoaded = reviewStorage.readReview(review.getReviewId());
         if (reviewLoaded == null) {
-            throw new ReviewNotFoundException("Отзыв не найден в БД.");
+            throw new NotFoundException("Отзыв не найден в БД.");
         }
         eventService.createReviewEvent(reviewLoaded.getUserId(), OperationType.UPDATE, reviewLoaded.getReviewId());
         return reviewStorage.updateReview(review);
@@ -61,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
     public boolean deleteReview(int id) {
         Review review = reviewStorage.readReview(id);
         if (review == null) {
-            throw new ReviewNotFoundException("Отзыв не найден в БД.");
+            throw new NotFoundException("Отзыв не найден в БД.");
         }
         eventService.createReviewEvent(review.getUserId(), OperationType.REMOVE, review.getReviewId());
         return reviewStorage.deleteReview(review.getReviewId());
@@ -93,6 +91,6 @@ public class ReviewServiceImpl implements ReviewService {
     private void checkParametersForLike(int reviewId, int userId) {
         if (reviewStorage.readReview(reviewId) == null
                 || userStorage.get(userId) == null)
-            throw new ReviewNotFoundException("Не найден отзыв с ID" + reviewId + " или пользователь " + userId);
+            throw new NotFoundException("Не найден отзыв с ID" + reviewId + " или пользователь " + userId);
     }
 }

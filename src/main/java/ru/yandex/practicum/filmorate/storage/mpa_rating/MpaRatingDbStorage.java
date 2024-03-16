@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.controller.NotFoundException;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
 import java.sql.ResultSet;
@@ -23,7 +24,7 @@ public class MpaRatingDbStorage implements MpaRatingStorage {
                     (rs, num) -> extractMpaRating(rs)
             );
         } catch (EmptyResultDataAccessException e) {
-            throw new MpaRatingNotFoundException(String.format("Не найдено пользователя с id = %s", id));
+            throw new NotFoundException(String.format("Не найдено пользователя с id = %s", id));
         }
     }
 
